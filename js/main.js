@@ -1,22 +1,36 @@
 function makeDialogue(src, filenames) {
-    $( "#" + src).dialog({
-        draggable: true,
+    // width = $( window ).width();
+    // height = $( window ).height();
+    obj = $("#" + src).dialog({
+        title: "Rename Files",
+        width: 'auto',
+        height: 'auto',
         modal: true,
         resizable: true,
-        title: "Repetitive Renaming",
-        buttons: [
-            {
-                text: "OK",
-                click: function () {
-                    $(this).dialog("close");
-                }
+        autoOpen: false,
+        buttons: {
+            "OK": function() {
+                $(this).empty();
+                $(this).dialog('destroy');
             },
-            {
-                text: "Cancel",
-                click: function () {
-                    $(this).dialog("close");
-                }
+            "Close": function() {
+                $(this).empty();
+                $(this).dialog('destroy');
             }
-        ]
-    }).show();
+        }
+    });
+
+    html = ("<table colspan=3><tbody>");
+    for (i = 0; i < filenames.length; i++) {
+        html +=("<tr>");
+            html +=("<td class='dialogueTD'>" + filenames[i] + "</td>");
+            html +=("<td class='dialogueTD'>renamed to</td>");
+            html +=("<td class='dialogueTD'>");
+                html +=("<input type='text' value='" + "renamed_" + i + "'>");
+            html +=("</td>");
+        html +=("</tr>");
+    }
+    html +=("</tbody></table>");
+    obj.html(html);
+    obj.dialog('open');
 }
