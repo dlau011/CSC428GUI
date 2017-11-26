@@ -13,6 +13,11 @@ body {
     margin-top: 10px;
 }
 
+.icon img:hover{
+    background-color: white;
+    opacity: 0.5;
+}
+
 .pdf-icon {
     content: url("../img/pdflogo.png");
     max-width: 64px;
@@ -149,4 +154,31 @@ taskbar stuff
     background: #cccccc;
     padding-left:5px;
     padding-right:5px;
+}
+
+.rightclick-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    font-family: sans-serif;
+    background: #FFF;
+    color: #333;
+    border-radius: 5px;
+    padding: 0;
+}
+
+/* Each of the items in the list */
+.rightclick-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+    list-style-type: none;
+    transition: all .3s ease;
+    user-select: none;
+}
+
+.rightclick-menu li:hover {
+    background-color: #DEF;
 }

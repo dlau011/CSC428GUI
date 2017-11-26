@@ -127,6 +127,11 @@
                     <p id="IMG_94_9260">IMG_94_9260</p>
                 </div>
                 <div class="col-sm-2 icon draggable folder">
+                    <image class='img-icon' src='img/notepad-icon.png'
+                           ondblclick=""></image>
+                    <p id="notepad-name">Notepad</p>
+                </div>
+                <div class="col-sm-2 icon draggable folder">
                     <image class='folder-icon'
                            ondblclick="makeFolderDialogue('Pictures', 'pictures_dialogue', 'pictures_content')"></image>
                     <p id="Pictures">Pictures</p>
@@ -166,5 +171,11 @@
                 <span class="taskbar-item" onclick="$('#startMenu').toggle()">Start</span>
             </div>
         </div>
+
+        <ul class='rightclick-menu'>
+            <li data-action="rename">Rename</li>
+            <!--<li data-action="second">Second thing</li>-->
+            <!--<li data-action="third">Third thing</li>-->
+        </ul>
     </body>
 </html>
