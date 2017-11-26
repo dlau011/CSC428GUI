@@ -49,6 +49,12 @@ html {
     max-height: 64px;
 }
 
+.folder-icon {
+    content: url("../img/foldericon.png");
+    max-width: 64px;
+    max-height: 64px;
+}
+
 .img-icon {
     max-width: 64px;
     max-height: 64px;
@@ -76,7 +82,7 @@ make the dialogues look like windows ui
 }
 
 .ui-widget-content {
-    background: #cccccc;
+    background: white;
     border: 1px solid #888888;
     color: black;
 }
@@ -95,7 +101,7 @@ make the dialogues look like windows ui
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-    background: #cccccc;
+    background: white;
     border-color: black;
     font-weight: bold;
 }
@@ -134,11 +140,56 @@ make the dialogues look like windows ui
 }
 
 .ui-tr.odd{
-    background-color: lightgray;
+    background-color: ghostwhite;
 }
 
 .ui-td input{
     width: 100%;
+}
+
+.ui-iframe {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+}
+/**
+taskbar stuff
+ */
+#taskbar{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:35px;
+    background: #cccccc;
+}
+
+.taskbar-item {
+    border: solid 1px black;
+    text-align: center;
+    box-shadow: 1px 1px .5px #888888;
+    display:inline-block;
+}
+
+#startMenu {
+    display: none;
+    bottom: 30px;
+    position: absolute;
+}
+
+#startMenu ul {
+    padding:0;
+    margin-bottom: 5px;
+}
+#startMenu li {
+    border: solid 1px black;
+    list-style-type: none;
+    background: #cccccc;
+    padding-left:5px;
+    padding-right:5px;
 }
 /*
  * Remove the gap between audio, canvas, iframes,

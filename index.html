@@ -24,6 +24,10 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
     <script>
+        // this is a dictionary of folders and their elements
+        var folders = {
+            "Pictures": ['BIRB_1_div','BIRB_2_div','BIRB_3_div']
+        }
         var numPDFClicks = 0;
         var numIMGClicks = 0;
         var numMovieClicks = 0;
@@ -71,6 +75,7 @@
         }
 
         $(document).ready(function() {
+            // when the page has loaded, make all the draggable items draggable
             $(".draggable").each(function() {
                 $(this).draggable({
                     drag: function( event, ui ) {
@@ -85,29 +90,76 @@
                         if (leftRemainder <= snapTolerance) {
                             ui.position.left = ui.position.left - leftRemainder;
                         }
-                    }
+                    },
+                    containment: 'document'
                 });
 
             })
+            // closes the start menu if its open and you click outside of it
+            $(document).mouseup(function(e) {
+                var container = $("#startMenu");
+                if (!container.is(e.target) && container.has(e.target).length === 0) {
+                    container.hide();
+                }
+            });
         });
 
     </script>
     </head>
-    <body class="body">
-        <div id="dialogueDiv"></div>
+    <body class="body" id="body">
+        <div id="renameDialogueDiv"></div>
         <div id="desktop_folder">
             <div class="icon draggable pdf">
-                <image class='pdf-icon' ondblclick="clicked('pdf');makeRenameDialogue('dialogueDiv', getFileNames('desktop_folder', 'pdf'));"></image>
+                <image class='pdf-icon' ondblclick="clicked('pdf');makeViewerDialogue('A1.pdf', 'A1pdf');"></image>
                 <p id="file_f10f903">file_f10f903</p>
+                <!-- this is a pdf which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
+                <div id="A1pdf"></div>
             </div>
             <div class="icon draggable pdf">
-                <image class='pdf-icon' ondblclick="clicked('pdf');makeRenameDialogue('dialogueDiv', getFileNames('desktop_folder', 'pdf'));"></image>
+                <image class='pdf-icon' ondblclick="clicked('pdf');makeRenameDialogue('renameDialogueDiv', getFileNames('desktop_folder', 'pdf'));"></image>
                 <p id="file_ab42nl">file_ab42nl</p>
             </div>
             <div class="icon draggable img">
-                <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('dialogueDiv', getFileNames('desktop_folder', 'img'));"></image>
+                <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('desktop_folder', 'img'));"></image>
                 <p id="IMG_94_9260">IMG_94_9260</p>
             </div>
+            <div class="icon draggable folder">
+                <image class='folder-icon' ondblclick="makeFolderDialogue('Pictures', 'pictures_dialogue', 'pictures_content')"></image>
+                <p id="Pictures">Pictures</p>
+                <!-- this is a folder which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
+                <div id="pictures_dialogue"></div>
+                <!-- default items in Pictures that get cloned into a dialogue when this is opened-->
+                <div id="pictures_content" style="display:none">
+                    <div class="icon draggable img" id="BIRB_1_div">
+                        <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('pictures_folder', 'img'));"></image>
+                        <p id="BIRB_1">BIRB_1</p>
+                    </div>
+                    <div class="icon draggable img"id="BIRB_2_div">
+                        <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('pictures_folder', 'img'));"></image>
+                        <p id="BIRB_2">BIRB_2</p>
+                    </div>
+                    <div class="icon draggable img"id="BIRB_3_div">
+                        <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('pictures_folder', 'img'));"></image>
+                        <p id="BIRB_3">BIRB_3</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="startMenu">
+            <ul>
+                <li>Notepad</li>
+                <li>Internet</li>
+            </ul>
+        </div>
+
+        <div id="taskbar">
+            <span class="taskbar-item" onclick="$('#startMenu').toggle()">
+                <p>Start</p>
+            </span>
+            <span class="taskbar-item">
+                <p>test</p>
+            </span>
         </div>
     </body>
 </html>

@@ -5,7 +5,7 @@ function makeRenameDialogue(src, filenames) {
         title: "Rename Files",
         width: 'auto',
         height: 'auto',
-        modal: true,
+        modal: false,
         resizable: true,
         autoOpen: false,
         buttons: {
@@ -13,6 +13,7 @@ function makeRenameDialogue(src, filenames) {
                 // if you click OK it will find the file by its original id and update its name and id
                 for (i = 0; i < filenames.length; i++) {
                     $('#'+filenames[i]).html($('#rename_'+i).val());
+                    $('#'+filenames[i]+'_dialogue').attr('id', $('#rename_'+i).val()+'_dialogue');
                     $('#'+filenames[i]).attr('id', $('#rename_'+i).val());
 
                 }
@@ -49,4 +50,71 @@ function makeRenameDialogue(src, filenames) {
     html +=("</tbody></table>");
     obj.html(html);
     obj.dialog('open');
+}
+
+function makeFolderDialogue(folder, objDiv, contentsDiv) {
+    obj = $("#" + objDiv).dialog({
+        title: folder,
+        width: 'auto',
+        height: 'auto',
+        modal: false,
+        resizable: true,
+        autoOpen: false,
+        close: (function() {
+            $(this).empty();
+            $(this).dialog('destroy');
+        })
+    });
+    contents = $('#'+contentsDiv).clone().children() // have to clone or it will remove them from the original location
+    // they aren't draggable when cloned
+    $(contents).each(function() {
+        $(this).draggable({
+            drag: function( event, ui ) {
+                var snapTolerance = $(this).draggable('option', 'snapTolerance');
+                var topRemainder = ui.position.top % 20;
+                var leftRemainder = ui.position.left % 20;
+
+                if (topRemainder <= snapTolerance) {
+                    ui.position.top = ui.position.top - topRemainder;
+                }
+
+                if (leftRemainder <= snapTolerance) {
+                    ui.position.left = ui.position.left - leftRemainder;
+                }
+            },
+            containment: 'document'
+        });
+
+    })
+    obj.html(contents)
+    obj.dialog('open')
+}
+
+function makeViewerDialogue(filename, dialogueDiv) {
+    wwidth = $(window).width()-10;
+    wheight = $(window).height();
+    iframe = $("<iframe class='ui-iframe' src='../ViewerJS/#../docs/" + filename + "'" + "' allowfullscreen webkitallowfullscreen></iframe>")
+
+
+    obj = $('#'+dialogueDiv).dialog({
+        title: filename,
+        width: wwidth*.50,
+        height: wheight*.90,
+        modal: false,
+        resizable: true,
+        autoOpen: false,
+        close: (function() {
+            $(this).empty();
+            $(this).dialog('destroy');
+        }),
+        resize: (function() {
+            $(iframe).css({width: '125%'});
+            $(iframe).css({width: '125%'});
+        }),
+        open: function (event, ui) {
+            $(this).css('overflow', 'hidden'); //this line does the actual hiding
+        }
+    });
+    iframe.appendTo(obj)
+    obj.dialog('open')
 }
