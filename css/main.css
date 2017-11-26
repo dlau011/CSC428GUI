@@ -40,7 +40,8 @@ html {
     float:left;
     width: 178px;
     text-align:center;
-    margin-top: 10px;
+    margin: .5em;
+    word-wrap: break-word;
 }
 
 .pdf-icon {
@@ -51,6 +52,12 @@ html {
 
 .folder-icon {
     content: url("../img/foldericon.png");
+    max-width: 64px;
+    max-height: 64px;
+}
+
+.vlc-icon {
+    content: url("../img/vlcicon.png");
     max-width: 64px;
     max-height: 64px;
 }

@@ -1,7 +1,7 @@
-function makeRenameDialogue(src, filenames) {
+function makeRenameDialogue(srcDiv, filenames) {
     // width = $( window ).width();
     // height = $( window ).height();
-    obj = $("#" + src).dialog({
+    obj = $("#" + srcDiv).dialog({
         title: "Rename Files",
         width: 'auto',
         height: 'auto',
@@ -9,18 +9,20 @@ function makeRenameDialogue(src, filenames) {
         resizable: true,
         autoOpen: false,
         buttons: {
-            "OK": function() {
+            "OK": function () {
                 // if you click OK it will find the file by its original id and update its name and id
                 for (i = 0; i < filenames.length; i++) {
-                    $('#'+filenames[i]).html($('#rename_'+i).val());
-                    $('#'+filenames[i]+'_dialogue').attr('id', $('#rename_'+i).val()+'_dialogue');
-                    $('#'+filenames[i]).attr('id', $('#rename_'+i).val());
+                    // if the files folder is open they are not in the expected place
+                    console.log(filenames[i])
+                    $('#' + filenames[i]).html($('#rename_' + i).val());
+                    $('#' + filenames[i] + '_dialogue').attr('id', $('#rename_' + i).val() + '_dialogue');
+                    $('#' + filenames[i]).attr('id', $('#rename_' + i).val());
 
                 }
                 $(this).empty();
                 $(this).dialog('destroy');
             },
-            "Close": function() {
+            "Close": function () {
                 $(this).empty();
                 $(this).dialog('destroy');
             }
@@ -53,6 +55,8 @@ function makeRenameDialogue(src, filenames) {
 }
 
 function makeFolderDialogue(folder, objDiv, contentsDiv) {
+    contents = $('#'+contentsDiv).children()
+
     obj = $("#" + objDiv).dialog({
         title: folder,
         width: 'auto',
@@ -61,13 +65,13 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
         resizable: true,
         autoOpen: false,
         close: (function() {
+            $('#'+contentsDiv).html(contents);
             $(this).empty();
             $(this).dialog('destroy');
         })
     });
-    contents = $('#'+contentsDiv).clone().children() // have to clone or it will remove them from the original location
     // they aren't draggable when cloned
-    $(contents).each(function() {
+    $(contents).children().each(function() {
         $(this).draggable({
             drag: function( event, ui ) {
                 var snapTolerance = $(this).draggable('option', 'snapTolerance');
@@ -93,13 +97,41 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
 function makeViewerDialogue(filename, dialogueDiv) {
     wwidth = $(window).width()-10;
     wheight = $(window).height();
-    iframe = $("<iframe class='ui-iframe' src='../ViewerJS/#../docs/" + filename + "'" + "' allowfullscreen webkitallowfullscreen></iframe>")
+    iframe = $("<iframe class='ui-iframe' src='../ViewerJS/#../docs/" + filename + "'" + " allowfullscreen webkitallowfullscreen></iframe>")
 
 
     obj = $('#'+dialogueDiv).dialog({
         title: filename,
         width: wwidth*.50,
         height: wheight*.90,
+        modal: false,
+        resizable: true,
+        autoOpen: false,
+        close: (function() {
+            $(this).empty();
+            $(this).dialog('destroy');
+        }),
+        resize: (function() {
+            $(iframe).css({width: '125%'});
+            $(iframe).css({width: '125%'});
+        }),
+        open: function (event, ui) {
+            $(this).css('overflow', 'hidden'); //this line does the actual hiding
+        }
+    });
+    iframe.appendTo(obj)
+    obj.dialog('open')
+}
+
+function makeImageDialogue(filename, dialogueDiv) {
+    wwidth = $(window).width()-10;
+    wheight = $(window).height();
+    iframe = $("<iframe class='ui-iframe' " + "src='../img/" + filename + "' " + " allowfullscreen webkitallowfullscreen></iframe>")
+
+    obj = $('#'+dialogueDiv).dialog({
+        title: filename,
+        width: 512,
+        height: 256,
         modal: false,
         resizable: true,
         autoOpen: false,

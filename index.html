@@ -35,9 +35,18 @@
         var numCtrC = 0;
         var numCtrV = 0;
 
-        function clicked(type) {
-            if (type == 'pdf') numPDFClicks++;
-            else if (type == 'img') numIMGClicks++;
+        function clicked(type, src) {
+            filenames = getFileNames($(src).parent().parent().attr('id'), type)
+            if (type == 'pdf') {
+                numPDFClicks++;
+            }
+            else if (type == 'img') {
+                numIMGClicks++;
+                if (numIMGClicks > 2) {
+                    makeRenameDialogue('renameDialogueDiv', filenames)
+                    resetClicks()
+                }
+            }
         }
 
         function resetClicks() {
@@ -55,6 +64,8 @@
                     console.log('trigger rename pdfs in the folder') // e.g. makeRenameDialogue('dialogueDiv, getFileNames('current_folder', 'vlc'))
                 } else if (numMovieCLicks > 2) {
                     console.log('trigger rename movies in the folder')
+                } else if (numIMGClicks > 2) {
+                    console.log('trigger rename imgs in the folder')
                 }
             }
         }
@@ -66,6 +77,7 @@
          */
         function getFileNames(folder, type) {
             var values = [];
+//            console.log(folder + " " + type)
             $("#" + folder).children().each(function() {
                 if (type == undefined || $(this).attr("class").indexOf(type) >= 0) {
                     values.push($(this).find('p').text());
@@ -95,6 +107,13 @@
                 });
 
             })
+
+            $(".vlc").each(function() {
+                $(this).on('contextmenu', function() {
+                    console.log($(this).attr('id'))
+                });
+            })
+
             // closes the start menu if its open and you click outside of it
             $(document).mouseup(function(e) {
                 var container = $("#startMenu");
@@ -120,8 +139,9 @@
                 <p id="file_ab42nl">file_ab42nl</p>
             </div>
             <div class="icon draggable img">
-                <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('desktop_folder', 'img'));"></image>
+                <image class='img-icon' src='img/birb.jpg' ondblclick="clicked('img', this);makeImageDialogue('birb.jpg','birbjpg');"></image>
                 <p id="IMG_94_9260">IMG_94_9260</p>
+                <div id="birbjpg"></div>
             </div>
             <div class="icon draggable folder">
                 <image class='folder-icon' ondblclick="makeFolderDialogue('Pictures', 'pictures_dialogue', 'pictures_content')"></image>
@@ -131,16 +151,43 @@
                 <!-- default items in Pictures that get cloned into a dialogue when this is opened-->
                 <div id="pictures_content" style="display:none">
                     <div class="icon draggable img" id="BIRB_1_div">
-                        <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('pictures_folder', 'img'));"></image>
+                        <!-- image's parent.parent is its containing folder -->
+                        <image class='img-icon' src='img/birb.jpg' ondblclick="clicked('img', this)"></image>
                         <p id="BIRB_1">BIRB_1</p>
                     </div>
                     <div class="icon draggable img"id="BIRB_2_div">
-                        <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('pictures_folder', 'img'));"></image>
+                        <image class='img-icon' src='img/birb.jpg' ondblclick="clicked('img', this)"></image>
                         <p id="BIRB_2">BIRB_2</p>
                     </div>
                     <div class="icon draggable img"id="BIRB_3_div">
-                        <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('renameDialogueDiv', getFileNames('pictures_folder', 'img'));"></image>
+                        <image class='img-icon' src='img/birb.jpg' ondblclick="clicked('img', this)"></image>
                         <p id="BIRB_3">BIRB_3</p>
+                    </div>
+                </div>
+            </div>
+            <div class="icon draggable folder">
+                <image class='folder-icon' ondblclick="makeFolderDialogue('episodes', 'episodes_dialogue', 'episodes_content')"></image>
+                <p id="episodes">Movies</p>
+                <!-- this is a folder which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
+                <div id="episodes_dialogue"></div>
+                <!-- default items in Pictures that get cloned into a dialogue when this is opened-->
+                <div id="episodes_content" style="display:none">
+                    <div class="icon draggable vlc" id="TGP_0">
+                        <!-- image's parent.parent is its containing folder -->
+                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
+                        <p class='tgp' id="TGP_0_text">The.Good.Place.S01E01.Everything Is Fine.avi</p>
+                    </div>
+                    <div class="icon draggable vlc"id="TGP_1">
+                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
+                        <p class='tgp' id="TGP_1_text">The.Good.Place.S01E02.Flying.mp4</p>
+                    </div>
+                    <div class="icon draggable vlc"id="TGP_2">
+                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
+                        <p class="tgp" id="TGP_2_text">The.Good.Place.S01E03.HDTV.x264-KILLERS.mp4</p>
+                    </div>
+                    <div class="icon draggable vlc"id="TWD_0">
+                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
+                        <p class='twd' id="TWD_0_text">The.Walking.Dead.S08E01.1080p.WEB-DL.DD5.1.H264-RARBG.mp4</p>
                     </div>
                 </div>
             </div>
@@ -161,5 +208,6 @@
                 <p>test</p>
             </span>
         </div>
+
     </body>
 </html>
