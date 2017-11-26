@@ -8,8 +8,12 @@ function makeRenameDialogue(srcDiv, filenames) {
         modal: false,
         resizable: true,
         autoOpen: false,
+        close: (function() {
+            deleteTaskbarItem("Rename Files");
+        }),
         buttons: {
-            "OK": function () {
+            "OK": function() {
+                deleteTaskbarItem("Rename Files");
                 // if you click OK it will find the file by its original id and update its name and id
                 for (i = 0; i < filenames.length; i++) {
                     // if the files folder is open they are not in the expected place
@@ -22,7 +26,8 @@ function makeRenameDialogue(srcDiv, filenames) {
                 $(this).empty();
                 $(this).dialog('destroy');
             },
-            "Close": function () {
+            "Close": function() {
+                deleteTaskbarItem("Rename Files");
                 $(this).empty();
                 $(this).dialog('destroy');
             }
@@ -52,6 +57,7 @@ function makeRenameDialogue(srcDiv, filenames) {
     html +=("</tbody></table>");
     obj.html(html);
     obj.dialog('open');
+    addTaskbarItem("Rename Files");
 }
 
 function makeFolderDialogue(folder, objDiv, contentsDiv) {
@@ -68,6 +74,7 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
             $('#'+contentsDiv).html(contents);
             $(this).empty();
             $(this).dialog('destroy');
+            deleteTaskbarItem(folder);
         })
     });
     // they aren't draggable when cloned
@@ -92,6 +99,7 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
     })
     obj.html(contents)
     obj.dialog('open')
+    addTaskbarItem(folder);
 }
 
 function makeViewerDialogue(filename, dialogueDiv) {
@@ -110,6 +118,7 @@ function makeViewerDialogue(filename, dialogueDiv) {
         close: (function() {
             $(this).empty();
             $(this).dialog('destroy');
+            deleteTaskbarItem(filename);
         }),
         resize: (function() {
             $(iframe).css({width: '125%'});
@@ -121,6 +130,17 @@ function makeViewerDialogue(filename, dialogueDiv) {
     });
     iframe.appendTo(obj)
     obj.dialog('open')
+    addTaskbarItem(filename);
+}
+
+function addTaskbarItem(name) {
+    var newItem = "<span class='taskbar-item'>"+ name +"</span>";
+    $('#taskbar').append(newItem);
+}
+
+function deleteTaskbarItem(name) {
+    var deleteItem = $('#taskbar > span:contains("'+ name +'")');
+    deleteItem.remove();
 }
 
 function makeImageDialogue(filename, dialogueDiv) {
