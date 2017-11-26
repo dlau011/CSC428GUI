@@ -36,6 +36,23 @@ html {
     text-shadow: none;
 }
 
+.icon {
+    float:left;
+    width: 178px;
+    text-align:center;
+    margin-top: 10px;
+}
+
+.pdf-icon {
+    content: url("../img/pdflogo.png");
+    max-width: 64px;
+    max-height: 64px;
+}
+
+.img-icon {
+    max-width: 64px;
+    max-height: 64px;
+}
 /*
  * A better looking default horizontal rule
  */
@@ -59,9 +76,9 @@ make the dialogues look like windows ui
 }
 
 .ui-widget-content {
-    background: #F9F9F9;
-    border: 1px solid #90d93f;
-    color: #222222;
+    background: #cccccc;
+    border: 1px solid #888888;
+    color: black;
 }
 
 .ui-dialog {
@@ -77,19 +94,24 @@ make the dialogues look like windows ui
     margin: 0;
 }
 
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background: #cccccc;
+    border-color: black;
+    font-weight: bold;
+}
 .ui-dialog .ui-dialog-content {
     background: none repeat scroll 0 0 transparent;
     border: 0 none;
     overflow: auto;
     position: relative;
-    padding: 0 !important;
+    padding: 15px !important;
 }
 
 .ui-widget-header {
-    background: #b0de78;
+    background: #007bff;
     border: 0;
-    color: #fff;
-    font-weight: normal;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .ui-dialog .ui-dialog-titlebar {
@@ -98,8 +120,25 @@ make the dialogues look like windows ui
     font-size: 1em;
 }
 
-.dialogueTD {
-    padding: 10px;
+.ui-input {
+    background: white;
+}
+
+.ui-widget-overlay {
+    opacity: 0;
+    filter: alpha(opacity=0);  /* IE8 and lower */
+}
+
+.ui-td {
+    padding: .5em;
+}
+
+.ui-tr.odd{
+    background-color: lightgray;
+}
+
+.ui-td input{
+    width: 100%;
 }
 /*
  * Remove the gap between audio, canvas, iframes,
@@ -135,7 +174,7 @@ textarea {
 }
 
 .body {
-    background-color: dodgerblue;
+    background-color: #b3d4fc;
 }
 
 /* ==========================================================================

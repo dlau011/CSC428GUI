@@ -24,23 +24,90 @@
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
     <script>
-        function getFileNames() {
+        var numPDFClicks = 0;
+        var numIMGClicks = 0;
+        var numMovieClicks = 0;
+        var numRenames = 0;
+        var numCtrC = 0;
+        var numCtrV = 0;
+
+        function clicked(type) {
+            if (type == 'pdf') numPDFClicks++;
+            else if (type == 'img') numIMGClicks++;
+        }
+
+        function resetClicks() {
+            numPDFClicks = 0;
+            numIMGClicks = 0;
+            numMovieClicks = 0;
+            numCtrC = 0;
+            numCtrV = 0;
+        }
+
+        function triggerAutoRename() {
+            // open the dialogue for the current folder if the threshold is met
+            if (numRenames > 2) {
+                if (numPDFClicks > 2) {
+                    console.log('trigger rename pdfs in the folder') // e.g. makeRenameDialogue('dialogueDiv, getFileNames('current_folder', 'vlc'))
+                } else if (numMovieCLicks > 2) {
+                    console.log('trigger rename movies in the folder')
+                }
+            }
+        }
+        /**
+         *
+         * @param folder - div name of a folder containing files
+         * @type type of files we want to include in the return. can be null if you want everything in Folder
+         * @returns {Array} of filenames in the folder
+         */
+        function getFileNames(folder, type) {
             var values = [];
-            $(".file").each(function() {
-                values.push($(this).text());
+            $("#" + folder).children().each(function() {
+                if (type == undefined || $(this).attr("class").indexOf(type) >= 0) {
+                    values.push($(this).find('p').text());
+                }
             })
             return values;
         }
+
+        $(document).ready(function() {
+            $(".draggable").each(function() {
+                $(this).draggable({
+                    drag: function( event, ui ) {
+                        var snapTolerance = $(this).draggable('option', 'snapTolerance');
+                        var topRemainder = ui.position.top % 20;
+                        var leftRemainder = ui.position.left % 20;
+
+                        if (topRemainder <= snapTolerance) {
+                            ui.position.top = ui.position.top - topRemainder;
+                        }
+
+                        if (leftRemainder <= snapTolerance) {
+                            ui.position.left = ui.position.left - leftRemainder;
+                        }
+                    }
+                });
+
+            })
+        });
+
     </script>
     </head>
     <body class="body">
-        <div id="dialogDiv">
+        <div id="dialogueDiv"></div>
+        <div id="desktop_folder">
+            <div class="icon draggable pdf">
+                <image class='pdf-icon' ondblclick="clicked('pdf');makeRenameDialogue('dialogueDiv', getFileNames('desktop_folder', 'pdf'));"></image>
+                <p id="file_f10f903">file_f10f903</p>
+            </div>
+            <div class="icon draggable pdf">
+                <image class='pdf-icon' ondblclick="clicked('pdf');makeRenameDialogue('dialogueDiv', getFileNames('desktop_folder', 'pdf'));"></image>
+                <p id="file_ab42nl">file_ab42nl</p>
+            </div>
+            <div class="icon draggable img">
+                <image class='img-icon' src='../img/birb.jpg' ondblclick="clicked('img');makeRenameDialogue('dialogueDiv', getFileNames('desktop_folder', 'img'));"></image>
+                <p id="IMG_94_9260">IMG_94_9260</p>
+            </div>
         </div>
-        <input type="button" value="clickme" onclick="makeDialogue('dialogDiv', getFileNames());">
-        </input>
-        <h class="file">FileA</h>
-        <h class="file">FileB</h>
-        <h class="file">FileB</h>
-
     </body>
 </html>
