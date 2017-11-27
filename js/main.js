@@ -9,15 +9,14 @@ function makeRenameDialogue(srcDiv, filenames) {
         resizable: true,
         autoOpen: false,
         close: (function() {
-            deleteTaskbarItem("Rename Files");
+            deleteTaskbarItem(srcDiv);
         }),
         buttons: {
             "OK": function() {
-                deleteTaskbarItem("Rename Files");
+                deleteTaskbarItem(srcDiv);
                 // if you click OK it will find the file by its original id and update its name and id
                 for (i = 0; i < filenames.length; i++) {
                     // if the files folder is open they are not in the expected place
-                    console.log(filenames[i])
                     $('#' + filenames[i]).html($('#rename_' + i).val());
                     $('#' + filenames[i] + '_dialogue').attr('id', $('#rename_' + i).val() + '_dialogue');
                     $('#' + filenames[i]).attr('id', $('#rename_' + i).val());
@@ -27,7 +26,7 @@ function makeRenameDialogue(srcDiv, filenames) {
                 $(this).dialog('destroy');
             },
             "Close": function() {
-                deleteTaskbarItem("Rename Files");
+                deleteTaskbarItem(srcDiv);
                 $(this).empty();
                 $(this).dialog('destroy');
             }
@@ -57,54 +56,60 @@ function makeRenameDialogue(srcDiv, filenames) {
     html +=("</tbody></table>");
     obj.html(html);
     obj.dialog('open');
-    addTaskbarItem("Rename Files");
+    addTaskbarItem("Rename Files", srcDiv);
 }
 
-function renameSingleFileDialogue(src, filename) {
-    obj = $("#" + src).dialog({
+/**
+ * Replaces the <p> text of a file <div>
+ * @param id id of a file to rename.
+ */
+function renameSingleFileDialogue(id) {
+    obj = $("#"+id+"_div").dialog({
         title: "Rename File",
-        width: 'auto',
+        width: '30%',
         height: 'auto',
         modal: false,
         resizable: true,
         autoOpen: false,
         close: (function() {
-            deleteTaskbarItem("Rename File");
+            deleteTaskbarItem(id+'_div'); // vlc divs have a corresponding dialogue div called id_div
         }),
         buttons: {
             "OK": function() {
-                deleteTaskbarItem("Rename File");
-                // if you click OK it will find the file by its original id and update its name and id
-                for (i = 0; i < filenames.length; i++) {
-                    $('#'+filenames[i]).html($('#rename_'+i).val());
-                    $('#'+filenames[i]+'_dialogue').attr('id', $('#rename_'+i).val()+'_dialogue');
-                    $('#'+filenames[i]).attr('id', $('#rename_'+i).val());
-                }
+                deleteTaskbarItem(id+"_div");
+                $('#'+id+'_text').html($('#rename').val());
                 $(this).empty();
                 $(this).dialog('destroy');
             },
             "Close": function() {
-                deleteTaskbarItem("Rename File");
+                deleteTaskbarItem(id+"_div");
                 $(this).empty();
                 $(this).dialog('destroy');
             }
         }
     });
     // build the HTML of the dialogue
-    html += ("<table colspan=2 width='100%'>");
-    html += "<thead><tr><th width='45%'>Original</th><th width='10%'></th><th width='45%'>New Filename</th></tr></thead>";
+    html = "<table colspan=2 width='100%'>";
+    html += "<thead><tr><th width='45%'>Original</th><th width='45%'>New Filename</th></tr></thead>";
     html += "<tbody>";
-            html +=("<td class='ui-td'>" + filenames[i] + "</td>");
-            html +=("<td class='ui-td'>");
-            html +=("<input id='" + filename + "' class='ui-input' type='text' value='" + filename + "'>");
-            html +=("</td>");
-        html +=("</tr>");
-    html +=("</tbody></table>");
+    html += "<td class='ui-td'>" + $('#'+id+'_text').text() + "</td>";
+    html += "<td class='ui-td'>";
+    html +="<input id='rename' class='ui-input' type='text' value='" + $('#'+id+'_text').text()+ "'>";
+    html += "</td>";
+    html +="</tr>";
+    html +="</tbody></table>";
     obj.html(html);
-    obj.dialog('open');
-    addTaskbarItem("Rename File");
+    obj.dialog('open')
+    $('#rename').select()
+    addTaskbarItem("Rename File", id+"_div");
 };
 
+/**
+ *
+ * @param folder name of the folder you are opening (e.g. "Pictures"
+ * @param objDiv div id the dialogue will be injected into
+ * @param contentsDiv parent div holding the files to show
+ */
 function makeFolderDialogue(folder, objDiv, contentsDiv) {
     contents = $('#'+contentsDiv).children()
 
@@ -119,7 +124,7 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
             $('#'+contentsDiv).html(contents);
             $(this).empty();
             $(this).dialog('destroy');
-            deleteTaskbarItem(folder);
+            deleteTaskbarItem(objDiv);
         })
     });
     // they aren't draggable when cloned
@@ -144,9 +149,14 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
     })
     obj.html(contents)
     obj.dialog('open')
-    addTaskbarItem(folder);
+    addTaskbarItem(folder, objDiv);
 }
 
+/**
+ *
+ * @param filename name of file to view
+ * @param dialogueDiv div to inject dialogue into
+ */
 function makeViewerDialogue(filename, dialogueDiv) {
     wwidth = $(window).width()-10;
     wheight = $(window).height();
@@ -163,7 +173,7 @@ function makeViewerDialogue(filename, dialogueDiv) {
         close: (function() {
             $(this).empty();
             $(this).dialog('destroy');
-            deleteTaskbarItem(filename);
+            deleteTaskbarItem(dialogueDiv);
         }),
         resize: (function() {
             $(iframe).css({width: '125%'});
@@ -175,7 +185,7 @@ function makeViewerDialogue(filename, dialogueDiv) {
     });
     iframe.appendTo(obj)
     obj.dialog('open')
-    addTaskbarItem(filename);
+    addTaskbarItem(filename, dialogueDiv);
 }
 
 function makeNotepadDialogue() {
@@ -184,16 +194,30 @@ function makeNotepadDialogue() {
 
 // TASKBAR SHOW/HIDE
 
-function addTaskbarItem(name) {
-    var newItem = "<span class='taskbar-item'>"+ name +"</span>";
+/**
+ * Makes a task on the taskbar
+ * @param name the title of the task
+ * @param divName the div the dialogue is inserted in (unique to each dialogue)
+ */
+function addTaskbarItem(name, divName) {
+    id = divName + "_task"
+    var newItem = "<span id='" + id + "' class='taskbar-item'>"+ name +"</span>";
     $('#taskbar').append(newItem);
 }
 
-function deleteTaskbarItem(name) {
-    var deleteItem = $('#taskbar > span:contains("'+ name +'")');
-    deleteItem.remove();
+/**
+ * Deletes a task on the taskbar
+ * @param divName the name of the div the dialogue is linked to
+ */
+function deleteTaskbarItem(divName) {
+    $('#'+divName+'_task').remove();
 }
 
+/**
+ *
+ * @param filename name of file to open
+ * @param dialogueDiv div id the dialogue will be injected into
+ */
 function makeImageDialogue(filename, dialogueDiv) {
     wwidth = $(window).width()-10;
     wheight = $(window).height();
@@ -207,6 +231,7 @@ function makeImageDialogue(filename, dialogueDiv) {
         resizable: true,
         autoOpen: false,
         close: (function() {
+            deleteTaskbarItem(dialogueDiv)
             $(this).empty();
             $(this).dialog('destroy');
         }),
@@ -227,21 +252,6 @@ function makeImageDialogue(filename, dialogueDiv) {
 
 // CUSTOM RIGHT CLICK MENU
 
-// Trigger action when the contexmenu is about to be shown
-$(document).bind("contextmenu", function (event) {
-
-    // Avoid the real one
-    event.preventDefault();
-
-    // Show contextmenu
-    $(".rightclick-menu").finish().toggle(100).
-
-    // In the right position (the mouse)
-    css({
-        top: event.pageY + "px",
-        left: event.pageX + "px"
-    });
-});
 
 // If the document is clicked somewhere
 $(document).bind("mousedown", function (e) {
@@ -254,20 +264,3 @@ $(document).bind("mousedown", function (e) {
     }
 });
 
-// If the menu element is clicked
-$(".rightclick-menu li").click(function(){
-
-    // This is the triggered action name
-    switch($(this).attr("data-action")) {
-
-        // A case for each action. Your actions here
-        case "rename":
-            renameSingleFileDialogue(src, filename);
-            break;
-        // case "second": alert("second"); break;
-        // case "third": alert("third"); break;
-    }
-
-    // Hide it AFTER the action was triggered
-    $(".rightclick-menu").hide(100);
-});
