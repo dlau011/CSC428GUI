@@ -23,68 +23,8 @@
         <link rel="stylesheet" href="css/main.css">
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
+
     <script>
-        // this is a dictionary of folders and their elements
-        var folders = {
-            "Pictures": ['BIRB_1_div','BIRB_2_div','BIRB_3_div']
-        }
-        var numPDFClicks = 0;
-        var numIMGClicks = 0;
-        var numMovieClicks = 0;
-        var numRenames = 0;
-        var numCtrC = 0;
-        var numCtrV = 0;
-
-        function clicked(type, src) {
-            filenames = getFileNames($(src).parent().parent().attr('id'), type)
-            if (type == 'pdf') {
-                numPDFClicks++;
-            }
-            else if (type == 'img') {
-                numIMGClicks++;
-                if (numIMGClicks > 2) {
-                    makeRenameDialogue('renameDialogueDiv', filenames)
-                    resetClicks()
-                }
-            }
-        }
-
-        function resetClicks() {
-            numPDFClicks = 0;
-            numIMGClicks = 0;
-            numMovieClicks = 0;
-            numCtrC = 0;
-            numCtrV = 0;
-        }
-
-        function triggerAutoRename() {
-            // open the dialogue for the current folder if the threshold is met
-            if (numRenames > 2) {
-                if (numPDFClicks > 2) {
-                    console.log('trigger rename pdfs in the folder') // e.g. makeRenameDialogue('dialogueDiv, getFileNames('current_folder', 'vlc'))
-                } else if (numMovieCLicks > 2) {
-                    console.log('trigger rename movies in the folder')
-                } else if (numIMGClicks > 2) {
-                    console.log('trigger rename imgs in the folder')
-                }
-            }
-        }
-        /**
-         *
-         * @param folder - div name of a folder containing files
-         * @type type of files we want to include in the return. can be null if you want everything in Folder
-         * @returns {Array} of filenames in the folder
-         */
-        function getFileNames(folder, type) {
-            var values = [];
-            $("#" + folder).children().each(function() {
-                if (type == undefined || $(this).attr("class").indexOf(type) >= 0) {
-                    values.push($(this).find('p').text());
-                }
-            })
-            return values;
-        }
-
         $(document).ready(function() {
             // when the page has loaded, make all the draggable items draggable
             $(".draggable").each(function() {
@@ -109,8 +49,8 @@
 
             $(".vlc").each(function() {
                 $(this).on('contextmenu', function() {
-                    id = $(this).attr('id')
                     event.preventDefault();
+                    id = $(this).attr('id')
                     // Show contextmenu
                     $(".rightclick-menu").finish().toggle(100).
 
@@ -149,88 +89,78 @@
         });
 
     </script>
+
     </head>
-    <body class="body" id="body">
+
+    <body>
         <div id="renameDialogueDiv"></div>
         <div id="desktop_folder" class="container">
             <div class="row">
                 <div class="col-sm-2 icon draggable pdf">
-                    <image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'A1pdf');"></image>
-                    <p id="file_f10f903">file_f10f903</p>
+                    <image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'PDF_0_dialogue');"></image>
+                    <p id="PDF_0_text">A1.pdf</p>
                     <!-- this is a pdf which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
-                    <div id="A1pdf"></div>
+                    <div id="PDF_0_dialogue"></div>
                 </div>
                 <div class="col-sm-2 icon draggable pdf">
-                    <image class='pdf-icon'
-                           ondblclick="makeRenameDialogue('renameDialogueDiv', getFileNames('desktop_folder', 'pdf'));"></image>
-                    <p id="file_ab42nl">file_ab42nl</p>
-                </div>
-                <div class="col-sm-2 icon draggable img">
-                    <image class='img-icon' src='img/birb.jpg'
-                           ondblclick="makeRenameDialogue('renameDialogueDiv', getFileNames('desktop_folder', 'img'));"></image>
-                    <p id="IMG_94_9260">IMG_94_9260</p>
+                    <image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'PDF_1_dialogue');"></image>
+                    <p id="PDF_1">file_ab42nl</p>
+                    <div id="PDF_1_dialogue"></div>
                 </div>
                 <div class="col-sm-2 icon draggable folder">
-                    <image class='img-icon' src='img/notepad-icon.png'
-                           ondblclick=""></image>
+                    <image class='img-icon' src='img/notepad-icon.png' ondblclick="makeNotepadDialogue('notepad_dialogue')"></image>
                     <p id="notepad-name">Notepad</p>
+                    <!-- accounting for 4 notepads at a time only -->
+                    <div id="notepad_dialogue"></div>
                 </div>
-                <div class="col-sm-2 icon draggable folder">
-                    <image class='folder-icon'
-                           ondblclick="makeFolderDialogue('Pictures', 'pictures_dialogue', 'pictures_content')"></image>
-                    <p id="Pictures">Pictures</p>
-                    <!-- this is a folder which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
-                    <div id="pictures_dialogue"></div>
+                <!-- episodes -->
+                <div class="icon draggable folder">
+                    <image class='folder-icon' ondblclick="makeFolderDialogue('Shows', 'episodes_dialogue', 'episodes_content')"></image>
+                    <p id="episodes">Shows</p>
                     <!-- default items in Pictures that get cloned into a dialogue when this is opened-->
-                    <div id="pictures_content" style="display:none">
-                        <div class="icon draggable img" id="BIRB_1_div">
-                            <image class='img-icon' src='img/birb.jpg'
-                                   ondblclick="clicked('img', this);"></image>
-                            <p id="BIRB_1">BIRB_1</p>
+                    <div id="episodes_content" style="display:none">
+                        <!-- this is a folder which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
+                        <div id="episodes_dialogue"></div>
+                        <div class="icon draggable vlc" id="TGP_0">
+                            <image class='vlc-icon'></image>
+                            <p id="TGP_0_text">The.Good.Place.S01E01.HDTV.Hqpke-XCvID.AFG.avi</p>
+                            <div id="TGP_0_div"></div>
+                            <input class='tgp' type="hidden" value="0" id="TGP_0_input">
                         </div>
-                        <div class="icon draggable img" id="BIRB_2_div">
-                            <image class='img-icon' src='img/birb.jpg'
-                                   ondblclick="clicked('img',this);"></image>
-                            <p id="BIRB_2">BIRB_2</p>
+                        <div class="icon draggable vlc"id="TGP_1">
+                            <image class='vlc-icon'></image>
+                            <p id="TGP_1_text">The.Good.Place.S01E02.1080p.HDTV.x265-CROOKS.mp4</p>
+                            <div id="TGP_1_div"></div>
+                            <input class='tgp' type="hidden" value="0" id="TGP_1_input">
                         </div>
-                        <div class="icon draggable img" id="BIRB_3_div">
-                            <image class='img-icon' src='img/birb.jpg'
-                                   ondblclick="clicked('img',this)"></image>
-                            <p id="BIRB_3">BIRB_3</p>
+                        <div class="icon draggable vlc"id="TGP_2">
+                            <image class='vlc-icon'></image>
+                            <p id="TGP_2_text">The.Good.Place.S01E03.HDTV.x264-KILLERS.mp4</p>
+                            <div id="TGP_2_div"></div>
+                            <input class="tgp" type="hidden" value="0" id="TGP_2_input">
+                        </div>
+                        <div class="icon draggable vlc"id="TGP_3">
+                            <image class='vlc-icon'></image>
+                            <p id="TGP_3_text">The.Good.Place.S01E04.HDTV.x264-KILLERS.mp4</p>
+                            <div id="TGP_3_div"></div>
+                            <input class="tgp" type="hidden" value="0" id="TGP_3_input">
+                        </div>
+                        <div class="icon draggable vlc"id="TWD_0">
+                            <image class='vlc-icon'></image>
+                            <p id="TWD_0_text">The.Walking.Dead.S08E01.1080p.WEB-DL.DD5.1.H264-RARBG.mp4</p>
+                            <div id="TWD_0_div"></div>
+                            <input class='twd' type="hidden" value="0" id="TWD_0_input">
+                        </div>
+                        <div class="icon draggable vlc"id="TWD_1">
+                            <image class='vlc-icon'></image>
+                            <p id="TWD_1_text">The.Walking.Dead.S08E02.720p.ES2.63.B34-RARBG.mp4</p>
+                            <div id="TWD_1_div"></div>
+                            <input class='twd' type="hidden" value="0" id="TWD_1_input">
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="icon draggable folder">
-                <image class='folder-icon' ondblclick="makeFolderDialogue('episodes', 'episodes_dialogue', 'episodes_content')"></image>
-                <p id="episodes">Movies</p>
-                <!-- this is a folder which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
-                <div id="episodes_dialogue"></div>
-                <!-- default items in Pictures that get cloned into a dialogue when this is opened-->
-                <div id="episodes_content" style="display:none">
-                    <div class="icon draggable vlc" id="TGP_0">
-                        <!-- image's parent.parent is its containing folder -->
-                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
-                        <p class='tgp' id="TGP_0_text">The.Good.Place.S01E01.Everything Is Fine.avi</p>
-                        <div id="TGP_0_div"></div>
-                    </div>
-                    <div class="icon draggable vlc"id="TGP_1">
-                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
-                        <p class='tgp' id="TGP_1_text">The.Good.Place.S01E02.Flying.mp4</p>
-                        <div id="TGP_1_div"></div>
-                    </div>
-                    <div class="icon draggable vlc"id="TGP_2">
-                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
-                        <p class="tgp" id="TGP_2_text">The.Good.Place.S01E03.HDTV.x264-KILLERS.mp4</p>
-                        <div id="TGP_2_div"></div>
-                    </div>
-                    <div class="icon draggable vlc"id="TWD_0">
-                        <image class='vlc-icon' ondblclick="clicked('vlc', this)"></image>
-                        <p class='twd' id="TWD_0_text">The.Walking.Dead.S08E01.1080p.WEB-DL.DD5.1.H264-RARBG.mp4</p>
-                        <div id="TWD_0_div"></div>
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <div id="startMenu">
