@@ -110,7 +110,6 @@
                 <div class="col-sm-2 icon draggable folder">
                     <image class='img-icon' src='img/notepad-icon.png' ondblclick="makeNotepadDialogue('notepad_dialogue')"></image>
                     <p id="notepad-name">Notepad</p>
-                    <!-- accounting for 4 notepads at a time only -->
                     <div id="notepad_dialogue"></div>
                 </div>
                 <!-- episodes -->
@@ -145,6 +144,7 @@
                             <div id="TGP_3_div"></div>
                             <input class="tgp" type="hidden" value="0" id="TGP_3_input">
                         </div>
+                        <hr style="clear:both;border: 1px solid white">
                         <div class="icon draggable vlc"id="TWD_0">
                             <image class='vlc-icon'></image>
                             <p id="TWD_0_text">The.Walking.Dead.S08E01.1080p.WEB-DL.DD5.1.H264-RARBG.mp4</p>
@@ -158,6 +158,17 @@
                             <input class='twd' type="hidden" value="0" id="TWD_1_input">
                         </div>
                     </div>
+                </div>
+
+                <div class="col-sm-2 icon">
+                    <image class='img-icon' src='img/chrome.png' ondblclick="makeBrowserDialogue('browser_dialogue_1','https://en.wikipedia.org/wiki/The_Good_Place_(season_1)')"></image>
+                    <p id="tgp_browser_name">Bookmark - The Good Place</p>
+                    <div id="browser_dialogue_1"></div>
+                </div>
+                <div class="col-sm-2 icon">
+                    <image class='img-icon' src='img/chrome.png' ondblclick="makeBrowserDialogue('browser_dialogue_2', 'https://en.wikipedia.org/wiki/The_Walking_Dead_(season_8)')"></image>
+                    <p id="twd_browser_name">Bookmark - The Walking Dead</p>
+                    <div id="browser_dialogue_2"></div>
                 </div>
             </div>
 

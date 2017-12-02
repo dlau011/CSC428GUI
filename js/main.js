@@ -1,4 +1,5 @@
 var renameCount = 0;
+var renameCancelled = 0;
 var titles = ['The.Good.Place.S01E01.Everything Is Fine.avi',
     'The.Good.Place.S01E02.Flying.avi',
     'The.Good.Place.S01E03.Tahani Al-Jamil.avi',
@@ -9,7 +10,6 @@ var titles = ['The.Good.Place.S01E01.Everything Is Fine.avi',
 
 var twd_titles = []
 
-var num_triggers = 0;
 function makeRenameDialogue(srcDiv, fileIDs) {
     // width = $( window ).width();
     // height = $( window ).height();
@@ -28,7 +28,6 @@ function makeRenameDialogue(srcDiv, fileIDs) {
                 deleteTaskbarItem(srcDiv);
                 // if you click OK it will find the file by its original id and update its name and id
                 for (i = 0; i < fileIDs.length; i++) {
-                    num_triggers++ // 0 for renaming TGP 1 for renaming TWD
                     // if the file's hidden input has not been set to 1, then include it in the dialogue
                     file = $('#'+ fileIDs[i])
                     $('#' + fileIDs[i] + "_text").html($('#rename_' + i).val());
@@ -42,6 +41,7 @@ function makeRenameDialogue(srcDiv, fileIDs) {
             },
             "Close": function() {
                 deleteTaskbarItem(srcDiv);
+                renameCancelled = 1;
                 $(this).empty();
                 $(this).dialog('destroy');
             }
@@ -56,24 +56,17 @@ function makeRenameDialogue(srcDiv, fileIDs) {
     for (i = 0; i < fileIDs.length; i++) {
         // hasn't been renamed yet
         if ($('#'+ fileIDs[i] + '_input').val() == 0) {
-            if ( ($('#' + fileIDs[i] + '_input').hasClass('tgp') && num_triggers == 0) ||
-                ($('#' + fileIDs[i] + '_input').hasClass('twd') && num_triggers > 0)) {
-                html += ("<tr id='row_" + i + "' class='ui-tr" + (count % 2 == 0 ? " odd'>" : "'>"));
-                html += ("<td class='ui-td'>" + $('#' + fileIDs[i] + '_text').text() + "</td>");
-                html += ("<td class='ui-td'>...</td>");
-                html += ("<td class='ui-td'>");
-                // this input element's value is going to be hard coded to some degree
-                // in order to accommodate the user input, we'll have to have a keystroke listener when for these inputs
-                // maybe i'll come up with some scenarios we can limit users to
-                // e.g. filename must be split by "." or "-" or "_" and the section of the name the user changes
-                // will trigger the listener to update the other inputs automatically
-                html += ("<textarea id='rename_" + i + "' class='ui-input' type='text'>" + titles[i] + "</textarea>");
-                html += ("</td>");
-                html += "<td><img src='img/x_icon.png' style='max-width:16px;max-height:16px' onclick='remove(\"row_" + i + "\")'></td>"
-                // html += "<td><img src='img/x_icon.png' style='max-width:16px;max-height:16px' onclick='remove(\"row_" + i + "\"></td>"
-                html += ("</tr>");
-                count++;
-            }
+            html += ("<tr id='row_" + i + "' class='ui-tr" + (count % 2 == 0 ? " odd'>" : "'>"));
+            html += ("<td class='ui-td'>" + $('#' + fileIDs[i] + '_text').text() + "</td>");
+            html += ("<td class='ui-td'>...</td>");
+            html += ("<td class='ui-td'>");
+            html += ("<textarea cols='30' id='rename_" + i + "' class='ui-input' type='text'>" + titles[i] + "</textarea>");
+            html += ("</td>");
+            html += "<td><img src='img/x_icon.png' style='max-width:16px;max-height:16px' onclick='remove(\"row_" + i + "\")'></td>"
+            // html += "<td><img src='img/x_icon.png' style='max-width:16px;max-height:16px' onclick='remove(\"row_" + i + "\"></td>"
+            html += ("</tr>");
+            count++;
+
         }
     }
     html +=("</tbody></table>");
@@ -88,7 +81,7 @@ function makeRenameDialogue(srcDiv, fileIDs) {
  * @param folder the id of the folder containing this file
  */
 function renameSingleFileDialogue(id) {
-    if (renameCount > 1) {
+    if (renameCount >= 2 && renameCancelled == 0) { // on the 3rd rename of a single file
         makeRenameDialogue('renameDialogueDiv', getFileNames($('#'+id).parent().attr('id'), 'vlc'))
         return;
     }
@@ -104,12 +97,14 @@ function renameSingleFileDialogue(id) {
         }),
         buttons: {
             "OK": function() {
-                $('#'+id+'_input').val('1') // set its flag to 1 meaning it has already been renamed
                 deleteTaskbarItem(id+"_div");
                 $('#'+id+'_text').html($('#rename').val());
                 $(this).empty();
                 $(this).dialog('destroy');
-                renameCount++
+                if ($('#'+id+'_input').val() == '0') {
+                    renameCount++
+                }
+                $('#'+id+'_input').val('1') // set its flag to 1 meaning it has already been renamed
             },
             "Close": function() {
                 deleteTaskbarItem(id+"_div");
@@ -139,6 +134,24 @@ function renameSingleFileDialogue(id) {
     $('#rename').select()
     addTaskbarItem("Rename File", id+"_div");
 };
+
+function makeBrowserDialogue(srcDiv, src) {
+    obj = $("#" + srcDiv).dialog({
+        title: "Chrome",
+        width: 'auto',
+        height: 'auto',
+        modal: false,
+        resizable: true,
+        autoOpen: false,
+        close: (function() {
+            deleteTaskbarItem(srcDiv);
+        })
+    });
+
+    iframe = "<iframe src='" + src + "' height='500' width='800'></iframe>"
+    obj.html(iframe)
+    obj.dialog('open')
+}
 /**
  *
  * @param folder - div name of a folder containing files
@@ -148,7 +161,7 @@ function renameSingleFileDialogue(id) {
 function getFileNames(folder, type) {
     var values = [];
     $("#" + folder).children().each(function() {
-        if (type == undefined || $(this).attr("class").indexOf(type) >= 0) {
+        if ($(this).is('div') && (this.type == undefined || $(this).attr("class").indexOf(type) >= 0)) {
             values.push($(this).attr('id'));
         }
     })
@@ -165,6 +178,8 @@ function remove(id) {
  * @param contentsDiv parent div holding the files to show
  */
 function makeFolderDialogue(folder, objDiv, contentsDiv) {
+    renameCancelled = 0
+    renameCount = 0
     contents = $('#'+contentsDiv).children()
 
     obj = $("#" + objDiv).dialog({
@@ -179,6 +194,9 @@ function makeFolderDialogue(folder, objDiv, contentsDiv) {
             $(this).empty();
             $(this).dialog('destroy');
             deleteTaskbarItem(objDiv);
+            $.each($("input[type='hidden']"), function () {
+                $(this).val('0')
+            });
         })
     });
     // they aren't draggable when cloned
