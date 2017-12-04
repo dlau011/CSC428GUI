@@ -294,7 +294,7 @@ function makeNotepadDialogue(dialogueDiv) {
  */
 function addTaskbarItem(name, divName) {
     id = divName + "_task";
-    var newItem = "<span id='" + id + "' class='taskbar-item' onclick='$('#" + divName + "').toggle()'>"+ name +"</span>";
+    var newItem = "<span id='" + id + "' class='taskbar-item' onclick='$(\"" + divName + "\").toggle()'>"+ name +"</span>";
     $('#taskbar').append(newItem);
 }
 
