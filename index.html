@@ -96,22 +96,22 @@
         <div id="renameDialogueDiv"></div>
         <div id="desktop_folder" class="container">
             <div class="row">
-                <div class="col-sm-2 icon draggable pdf">
-                    <image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'PDF_0_dialogue');"></image>
-                    <p id="PDF_0_text">A1.pdf</p>
-                    <!-- this is a pdf which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open -->
-                    <div id="PDF_0_dialogue"></div>
-                </div>
-                <div class="col-sm-2 icon draggable pdf">
-                    <image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'PDF_1_dialogue');"></image>
-                    <p id="PDF_1">file_ab42nl</p>
-                    <div id="PDF_1_dialogue"></div>
-                </div>
-                <div class="col-sm-2 icon draggable folder">
-                    <image class='img-icon' src='img/notepad-icon.png' ondblclick="makeNotepadDialogue('notepad_dialogue')"></image>
-                    <p id="notepad-name">Notepad</p>
-                    <div id="notepad_dialogue"></div>
-                </div>
+                <!--<div class="col-sm-2 icon draggable pdf">-->
+                    <!--<image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'PDF_0_dialogue');"></image>-->
+                    <!--<p id="PDF_0_text">A1.pdf</p>-->
+                    <!--&lt;!&ndash; this is a pdf which means it can trigger a dialogue so it needs a corresponding div where the dialogue will open &ndash;&gt;-->
+                    <!--<div id="PDF_0_dialogue"></div>-->
+                <!--</div>-->
+                <!--<div class="col-sm-2 icon draggable pdf">-->
+                    <!--<image class='pdf-icon' ondblclick="makeViewerDialogue('A1.pdf', 'PDF_1_dialogue');"></image>-->
+                    <!--<p id="PDF_1">file_ab42nl</p>-->
+                    <!--<div id="PDF_1_dialogue"></div>-->
+                <!--</div>-->
+                <!--<div class="col-sm-2 icon draggable folder">-->
+                    <!--<image class='img-icon' src='img/notepad-icon.png' ondblclick="makeNotepadDialogue('notepad_dialogue')"></image>-->
+                    <!--<p id="notepad-name">Notepad</p>-->
+                    <!--<div id="notepad_dialogue"></div>-->
+                <!--</div>-->
                 <!-- episodes -->
                 <div class="icon draggable folder">
                     <image class='folder-icon' ondblclick="makeFolderDialogue('Shows', 'episodes_dialogue', 'episodes_content')"></image>
@@ -174,12 +174,13 @@
 
         </div>
 
-        <div id="startMenu">
-            <ul>
-                <li>Notepad</li>
-                <li>Internet</li>
-            </ul>
-        </div>
+        <!--<div id="startMenu">-->
+            <!--<ul>-->
+                <!--<li onclick="makeFolderDialogue('Shows', 'episodes_dialogue', 'episodes_content')">Shows</li>-->
+                <!--<li onclick="makeBrowserDialogue('browser_dialogue_1','https://en.wikipedia.org/wiki/The_Good_Place_(season_1)')">Bookmark - The Good Place</li>-->
+                <!--<li onclick="makeBrowserDialogue('browser_dialogue_2', 'https://en.wikipedia.org/wiki/The_Walking_Dead_(season_8)')">Bookmark - The Walking Dead</li>-->
+            <!--</ul>-->
+        <!--</div>-->
 
         <div class="container">
             <div id="taskbar" class="row">

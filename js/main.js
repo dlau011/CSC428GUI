@@ -48,7 +48,7 @@ function makeRenameDialogue(srcDiv, fileIDs) {
         }
     });
     // build the HTML of the dialogue
-    html = 'Windows has detected repetetive actions. Would you like the following file(s) to be renamed automatically?';
+    html = 'Windows has detected repetitive actions. Would you like the following file(s) to be renamed automatically?';
     html += ("<table colspan=3 width='100%'>");
     html += "<thead><tr><th width='45%'>Original</th><th width='5%'></th><th width='45%'>New Filename</th><th width='5%'></th></tr></thead>";
     html += "<tbody>";
@@ -133,7 +133,7 @@ function renameSingleFileDialogue(id) {
     obj.dialog('open')
     $('#rename').select()
     addTaskbarItem("Rename File", id+"_div");
-};
+}
 
 function makeBrowserDialogue(srcDiv, src) {
     obj = $("#" + srcDiv).dialog({
@@ -147,10 +147,10 @@ function makeBrowserDialogue(srcDiv, src) {
             deleteTaskbarItem(srcDiv);
         })
     });
-
     iframe = "<iframe src='" + src + "' height='500' width='800'></iframe>"
     obj.html(iframe)
     obj.dialog('open')
+    addTaskbarItem("Chrome", srcDiv);
 }
 /**
  *
@@ -293,8 +293,8 @@ function makeNotepadDialogue(dialogueDiv) {
  * @param divName the div the dialogue is inserted in (unique to each dialogue)
  */
 function addTaskbarItem(name, divName) {
-    id = divName + "_task"
-    var newItem = "<span id='" + id + "' class='taskbar-item'>"+ name +"</span>";
+    id = divName + "_task";
+    var newItem = "<span id='" + id + "' class='taskbar-item' onclick='$('#" + divName + "').toggle()'>"+ name +"</span>";
     $('#taskbar').append(newItem);
 }
 
@@ -339,9 +339,6 @@ function makeImageDialogue(filename, dialogueDiv) {
     iframe.appendTo(obj)
     obj.dialog('open')
 }
-// function toggleTaskbarItem() {
-//     $('#startMenu').toggle()
-// }
 
 // CUSTOM RIGHT CLICK MENU
 
