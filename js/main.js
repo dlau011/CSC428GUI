@@ -1,11 +1,11 @@
 var renameCount = 0;
 var renameCancelled = 0;
 var titles = ['The.Good.Place.S01E01.Everything Is Fine.avi',
-    'The.Good.Place.S01E02.Flying.avi',
-    'The.Good.Place.S01E03.Tahani Al-Jamil.avi',
-    'The.Good.Place.S01E04.Jason Mendoza.avi',
-    "The.Walking.Dead.S08E01.Mercy.avi",
-    "The.Walking.Dead.S08E02.The Damned.avi"
+    'The.Good.Place.S01E02.Flying.mp4',
+    'The.Good.Place.S01E03.Tahani Al-Jamil.mp4',
+    'The.Good.Place.S01E04.Jason Mendoza.mp4',
+    "The.Walking.Dead.S08E01.Mercy.mp4",
+    "The.Walking.Dead.S08E02.The Damned.mp4"
 ]
 
 var twd_titles = []
